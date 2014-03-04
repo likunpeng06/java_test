@@ -20,7 +20,7 @@ public class GenericTypeTest {
         list1.add(2);
         int i1 = list1.get(1);
 
-        List<String> list2 = new ArrayList<>();//jdk1.7 写法
+        List<String> list2 = new ArrayList<String>();//jdk1.7 写法
 
         System.out.println(list1.getClass() == list2.getClass());
 
