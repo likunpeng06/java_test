@@ -15,7 +15,7 @@ public class ServletTest extends HttpServlet {
         PrintWriter out = resp.getWriter();
         ClassLoader loader = this.getClass().getClassLoader();
         while (loader != null) {
-            out.println(loader.getClass().getName());
+            out.println(loader.getClass().getName() + "<br />");
             loader = loader.getParent();
         }
         out.println(loader);
