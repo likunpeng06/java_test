@@ -172,14 +172,16 @@ public class CharsetTest {
             System.out.println("---------------------");
         }
 
+        aaa = "我b";
         String unicode = CharsetTest.str2Unicode(aaa);
         System.out.println(unicode);
         System.out.println(CharsetTest.unicode2Str(unicode));
 
         System.out.println(URLEncoder.encode(aaa, "UTF-8"));
 
+        String[] a = "_a_b_c".split("_");
+        System.out.println(a);
     }
-
 
     public static String unicode2Str(String str) {
         StringBuffer sb = new StringBuffer();
