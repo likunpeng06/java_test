@@ -181,6 +181,8 @@ public class CharsetTest {
 
         String[] a = "_a_b_c".split("_");
         System.out.println(a);
+
+        System.out.println(CharsetTest.unicode2Str("\\u975e\\u6cd5\\u7684mset\\u53c2\\u6570"));
     }
 
     public static String unicode2Str(String str) {

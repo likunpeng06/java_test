@@ -2,10 +2,6 @@ package com.lecai.java.thread;
 
 import java.util.Random;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by qatang on 14-4-9.
@@ -13,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ThreadTest {
     private static int data = 0;
     final ThreadLocal<Integer> threadLocal = new ThreadLocal<Integer>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 //        System.out.println(Thread.currentThread().getName());
 //        Thread thread = new Thread() {
 //            @Override
@@ -110,7 +106,7 @@ public class ThreadTest {
         //举例：共享一个boolean的变量，先不用volatile，再使用volatile，两个线程设置sleep
 
         //Executor
-        ExecutorService executorService = Executors.newCachedThreadPool();
+//        ExecutorService executorService = Executors.newCachedThreadPool();
 
 //        Future<String> future = executorService.submit(new Callable<String>() {
 //            @Override
@@ -136,42 +132,174 @@ public class ThreadTest {
 //
 //        take 方获取并移除表示下一个已完成任务的 Future，如果目前不存在这样的任务，则等待。<如果需要用到返回值建议用take>
 //                poll 获取并移除表示下一个已完成任务的 Future，如果不存在这样的任务，则返回null。
-        CompletionService<String> completionService = new ExecutorCompletionService<String>(executorService);
-        for (int i = 0; i < 5; i ++) {
-            final int seq = i;
-            completionService.submit(new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    TimeUnit.SECONDS.sleep(new Random().nextInt(5));
-                    return String.valueOf(seq);
-                }
-            });
-        }
+//        ExecutorService executorService = Executors.newCachedThreadPool();
+//        CompletionService<String> completionService = new ExecutorCompletionService<String>(executorService);
+//        for (int i = 0; i < 5; i ++) {
+//            final int seq = i;
+//            completionService.submit(new Callable<String>() {
+//                @Override
+//                public String call() throws Exception {
+//                    TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+//                    return String.valueOf(seq);
+//                }
+//            });
+//        }
+//
+//        for (int i = 0; i < 5; i ++) {
+//            try {
+//                System.out.println(completionService.take().get());
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        //ReentrantReadWriteLock，实现线程互斥。 读写锁，多线程读操作不用上锁，写操作上锁，jdk文档里有一个CachedData的例子
+//        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+//
+//        //Condition，实现线程通信。wait notify ,jdk文档例子阻塞队列，解释比wait notify高级之处
+//        Lock lock = new ReentrantLock();
+//        Condition condition = lock.newCondition();
+//
+//        try {
+//            condition.await(); //wait，千万别写wait()，那个是Object的
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        condition.signal();//notify
 
-        for (int i = 0; i < 5; i ++) {
-            try {
-                System.out.println(completionService.take().get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
+        //Semaphore
 
-        //ReentrantReadWriteLock，实现线程互斥。 读写锁，多线程读操作不用上锁，写操作上锁，jdk文档里有一个CachedData的例子
-        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+        //CyclicBarrier
+//        ExecutorService executorService2 = Executors.newFixedThreadPool(5);
+//        final CyclicBarrier cyclicBarrier = new CyclicBarrier(5);
+//        for (int i = 0; i < 5; i ++) {
+//            executorService2.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    System.out.println(Thread.currentThread().getName() + " is waiting");
+//                    try {
+//                        cyclicBarrier.await();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (BrokenBarrierException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    try {
+//                        TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    System.out.println(Thread.currentThread().getName() + " is waiting again");
+//                    try {
+//                        cyclicBarrier.await();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (BrokenBarrierException e) {
+//                        e.printStackTrace();
+//                    }
+//                    System.out.println(Thread.currentThread().getName() + " is done");
+//                }
+//            });
+//        }
+//        executorService2.shutdown();
 
-        //Condition，实现线程通信。wait notify ,jdk文档例子阻塞队列，解释比wait notify高级之处
-        Lock lock = new ReentrantLock();
-        Condition condition = lock.newCondition();
+        //CountDownLatch
+//        ExecutorService executorService3 = Executors.newFixedThreadPool(5);
+//        final CountDownLatch countDownLatch = new CountDownLatch(5);
+//        for (int i = 0; i < 5; i ++) {
+//            executorService3.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    int seconds = new Random().nextInt(10);
+//                    System.out.println(Thread.currentThread().getName() + " waiting seconds : " + seconds);
+//                    try {
+//                        TimeUnit.SECONDS.sleep(seconds);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    countDownLatch.countDown();
+//
+//                    System.out.println(Thread.currentThread().getName() + " is done");
+//                }
+//            });
+//        }
+//        executorService3.shutdown();
+//
+//
+//        System.out.println(Thread.currentThread().getName() + " is waiting");
+//        try {
+//            countDownLatch.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(Thread.currentThread().getName() + " is done");
 
-        try {
-            condition.await(); //wait，千万别写wait()，那个是Object的
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //Exchanger
+//        ExecutorService executorService4 = Executors.newFixedThreadPool(5);
+//        final Exchanger<Integer> exchanger = new Exchanger<Integer>();
+//        for (int i = 0; i < 5; i ++) {
+//            executorService4.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    int seconds = new Random().nextInt(10);
+//                    System.out.println(Thread.currentThread().getName() + " waiting seconds : " + seconds);
+//                    try {
+//                        TimeUnit.SECONDS.sleep(seconds);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    Integer data = null;
+//                    try {
+//                        data = exchanger.exchange(seconds);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    System.out.println(Thread.currentThread().getName() + " data exchange to : " + data);
+//                }
+//            });
+//        }
+//        executorService4.shutdown();
 
-        condition.signal();//notify
+        //阻塞队列 ArrayBlockingQueue 查看jdk文档
+//        ExecutorService executorService5 = Executors.newFixedThreadPool(5);
+//        final ArrayBlockingQueue<Integer> arrayBlockingQueue = new ArrayBlockingQueue<Integer>(5);
+//        executorService5.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    int seconds = new Random().nextInt(5);
+//                    System.out.println(Thread.currentThread().getName() + " 向队列里放入输入data : " + seconds);
+//                    try {
+//                        TimeUnit.SECONDS.sleep(seconds);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {//add offer put
+//                        System.out.println(arrayBlockingQueue.offer(seconds));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    System.out.println(Thread.currentThread().getName() + " has put data : " + seconds );
+//                }
+//            }
+//        });
+//        executorService5.shutdown();
+
+        //同步集合类，查看jdk java.util.concurrent包的说明
+        //ConcurrentHashMap
+        //ConcurrentSkipListMap ->> treeMap
+        //CopyOnWriteArrayList  普通collection迭代的时候remove元素，会导致报错
     }
 
     class A {
