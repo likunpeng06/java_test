@@ -182,7 +182,7 @@ public class CharsetTest {
         String[] a = "_a_b_c".split("_");
         System.out.println(a);
 
-        System.out.println(CharsetTest.unicode2Str("\\u975e\\u6cd5\\u7684mset\\u53c2\\u6570"));
+        System.out.println(CharsetTest.unicode2Str("{\"code\":1001,\"message\":\"\\u6570\\u636e\\u9519\\u8bef\\uff0c\\u539f\\u56e0\\u662f\\uff1a\\u60a8\\u65e0\\u6743\\u67e5\\u8be2[1404270000000000193]\\u7684\\u8ba2\\u5355\\uff01\"}"));
     }
 
     public static String unicode2Str(String str) {
